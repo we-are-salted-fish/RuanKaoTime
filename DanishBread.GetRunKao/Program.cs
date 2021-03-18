@@ -60,9 +60,20 @@ namespace DanishBread.GetRunKao
             {
                 var rList = Analysis().Result;
 
+                var index = 1;
+                Console.WriteLine("省份\t\t 时间");
                 foreach (var item in rList)
                 {
-                    Console.WriteLine($"省份：{item.ProvinceName}   时间：{item.TimeRange}");
+                    if(item.ProvinceName.Length > 2)
+                    {
+                        Console.WriteLine($"{index}.{item.ProvinceName}\t{item.TimeRange}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"{index}.{item.ProvinceName}\t\t{item.TimeRange}");
+                    }
+
+                    index++;
                 }
 
                 if (rList.Select(p => p.ProvinceName).Contains("广东"))
@@ -70,7 +81,7 @@ namespace DanishBread.GetRunKao
                     MailHelper.SendMail(_mailConfig, "广东的软考报名时间出来了。");
                     flag = false;
                 }
-
+                Console.WriteLine();
                 Thread.Sleep(60 * 1000);
             }            
 
