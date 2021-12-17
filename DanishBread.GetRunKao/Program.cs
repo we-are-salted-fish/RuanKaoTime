@@ -57,41 +57,57 @@ namespace DanishBread.GetRunKao
             //MailHelper.SendMail(_mailConfig, "广东的软考报名时间出来了。");
             var flag = true;
             var loopIndex = 1;
-            while (flag)
+            do
             {
-                var rList = Analysis().Result;
-
-                var index = 1;
                 Console.WriteLine(loopIndex);
-                Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                Console.WriteLine("-省份\t\t 时间");
-                foreach (var item in rList)
-                {
-                    if(item.ProvinceName.Length > 2)
-                    {
-                        Console.WriteLine($"{index}.{item.ProvinceName}\t{item.TimeRange}");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"{index}.{item.ProvinceName}\t\t{item.TimeRange}");
-                    }
-
-                    index++;
-                }
-
-                if (rList.Select(p => p.ProvinceName).Contains("广东"))
-                {
-                    MailHelper.SendMail(_mailConfig, "广东的软考报名时间出来了。");
-                    flag = false;
-                }
-                Console.WriteLine();
+                flag = SignUp("广东");
                 loopIndex++;
                 Thread.Sleep(60 * 1000);
-            }            
+            } while (flag);
+                   
 
             Console.ReadKey();
         }
 
+        static bool SignUp(string provinceName)
+        {
+            var flag = true;
+            var rList = Analysis().Result;
+
+            var index = 1;
+            Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            Console.WriteLine("-省份\t\t 时间");
+            foreach (var item in rList)
+            {
+                if (item.ProvinceName.Length > 2)
+                {
+                    Console.WriteLine($"{index}.{item.ProvinceName}\t{item.TimeRange}");
+                }
+                else
+                {
+                    Console.WriteLine($"{index}.{item.ProvinceName}\t\t{item.TimeRange}");
+                }
+
+                index++;
+            }
+
+            if (rList.Select(p => p.ProvinceName).Contains(provinceName))
+            {
+                MailHelper.SendMail(_mailConfig, "广东的软考报名时间出来了。");
+                flag = false;
+            }
+
+            Console.WriteLine();
+
+            return flag;
+        }
+
+        static bool QueryGrade()
+        {
+            // TODO
+
+            return flag;
+        }
 
     }
 
