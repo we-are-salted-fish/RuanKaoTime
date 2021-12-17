@@ -106,7 +106,7 @@ namespace DanishBread.GetRunKao
         {
             // TODO
 
-            return flag;
+            return true;
         }
 
     }
