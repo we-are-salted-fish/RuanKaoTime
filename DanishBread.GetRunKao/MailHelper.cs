@@ -1,4 +1,5 @@
 ﻿using DanishBread.GetRunKao.Config;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Net.Mail;
@@ -6,15 +7,21 @@ using System.Text;
 
 namespace DanishBread.GetRunKao
 {
-    public class MailHelper
-    {
+public class MailHelper
+{
+        private readonly MailConfig _config;
 
-        public static void SendMail(MailConfig config, string msg)
+        public MailHelper(IOptions<MailConfig> config)
         {
-            MailAddress mailAddress = new MailAddress(config.Address);
+            this._config = config.Value;
+        }
+
+        public void SendMail(string msg)
+        {
+            MailAddress mailAddress = new MailAddress(_config.Address);
             MailMessage mailMessage = new MailMessage();
 
-            foreach (var item in config.ReceiveList)
+            foreach (var item in _config.ReceiveList)
             {
                 if (!string.IsNullOrEmpty(item))
                     mailMessage.To.Add(item.ToString());
@@ -29,8 +36,8 @@ namespace DanishBread.GetRunKao
             mailMessage.IsBodyHtml = false;
 
             SmtpClient smtp = new SmtpClient();
-            smtp.Credentials = new System.Net.NetworkCredential(config.Address, config.Password);
-            smtp.Host = config.Host;
+            smtp.Credentials = new System.Net.NetworkCredential(_config.Address, _config.Password);
+            smtp.Host = _config.Host;
             smtp.Send(mailMessage);
         }
     }
