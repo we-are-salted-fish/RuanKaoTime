@@ -1,5 +1,6 @@
 ﻿using AngleSharp;
 using DanishBread.GetRunKao.Config;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -47,26 +48,54 @@ namespace DanishBread.GetRunKao
             return timeList;
         }
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             Console.WriteLine("Hello World!");
 
             Init();
+
+            var services = new ServiceCollection();
+            services.AddSingleton<IAngleSharpService, AngleSharpService>();
+            services.AddSingleton<IRunkaoService, RunkaoService>();
+
+            using var serviceProvider = services.BuildServiceProvider();
+            var runkaoService = serviceProvider.GetService<IRunkaoService>();
+
+            var index = 1;
+            var year = "2022";
+            var times = "上";
+
+            while (true)
+            {
+                var flag = await runkaoService.CheckScore(year, times);
+
+                Console.WriteLine($"检测第{index}次，查询结果是否已出：{(flag ? "是" : "否")}");
+
+                if (flag)
+                {
+                    MailHelper.SendMail(_mailConfig, $"{year}年{times}半年软考成绩已出....开始查询成绩");
+                    break;
+                }
+
+                await Task.Delay(60 * 1000);
+                index++;
+            }
+
             //var r = GetHtmlString();
             //Console.WriteLine(r);
             //MailHelper.SendMail(_mailConfig, "广东的软考报名时间出来了。");
-            var flag = true;
-            var loopIndex = 1;
-            do
-            {
-                Console.WriteLine(loopIndex);
-                flag = SignUp("广东");
-                loopIndex++;
-                Thread.Sleep(60 * 1000);
-            } while (flag);
+            //var flag = true;
+            //var loopIndex = 1;
+            //do
+            //{
+            //    Console.WriteLine(loopIndex);
+            //    flag = SignUp("广东");
+            //    loopIndex++;
+            //    Thread.Sleep(60 * 1000);
+            //} while (flag);
                    
 
-            Console.ReadKey();
+            //Console.ReadKey();
         }
 
         static bool SignUp(string provinceName)
@@ -101,14 +130,6 @@ namespace DanishBread.GetRunKao
 
             return flag;
         }
-
-        static bool QueryGrade()
-        {
-            // TODO
-
-            return true;
-        }
-
     }
 
     public class TimeList
