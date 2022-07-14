@@ -589,6 +589,15 @@ namespace RedisSomeHelper
                 redis.Dispose();
             }
         }
+
+        public static List<string> GetAllKeys()
+        {
+            using (IRedisClient redis = PooleClient.GetClient())
+            {
+                var keys = redis.GetAllKeys();
+                return keys;
+            }
+        }
     }
 
     /// <summary>

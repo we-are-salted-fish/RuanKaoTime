@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RedisSomeHelper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +8,7 @@ namespace ConsoleApp1
 {
     public class RedisCache : ICache
     {
-        public IList<string> AllKeys => throw new NotImplementedException();
+        public IList<string> AllKeys => PooledRedisClientHelper.GetAllKeys();
 
         public void Clean()
         {

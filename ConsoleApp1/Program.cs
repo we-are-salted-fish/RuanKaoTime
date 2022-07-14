@@ -12,6 +12,13 @@ namespace ConsoleApp1
         {
             PooledRedisClientHelper.Set("bbb", "111", DateTime.Now.AddMinutes(10));
 
+            var keys = CacheHelper.AllKeys;
+
+            foreach (var key in keys)
+            {
+                Console.WriteLine($"key:{key}");
+            }
+
             Console.ReadKey();
         }
     }
