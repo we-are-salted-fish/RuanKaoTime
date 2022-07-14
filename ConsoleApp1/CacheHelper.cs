@@ -12,7 +12,8 @@ namespace ConsoleApp1
         static CacheHelper()
         {
             //cache = ObjectHelper.GetObject<ICache>();
-            cache = new RedisCache();
+            //cache = new RedisCache();
+            cache = new TestMemoryCache();
         }
 
         public static IList<string> AllKeys

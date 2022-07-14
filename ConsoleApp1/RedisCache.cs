@@ -12,27 +12,38 @@ namespace ConsoleApp1
 
         public void Clean()
         {
-            throw new NotImplementedException();
+            foreach (var key in AllKeys)
+            {
+                PooledRedisClientHelper.Remove(key);
+            }
         }
 
         public object GetValue(string key)
         {
-            throw new NotImplementedException();
+            if (PooledRedisClientHelper.ContainsKey(key))
+            {
+                return PooledRedisClientHelper.GetValueString(key);
+            }
+
+            return null;
         }
 
         public void Remove(string key)
         {
-            throw new NotImplementedException();
+            if (PooledRedisClientHelper.ContainsKey(key))
+            {
+               PooledRedisClientHelper.Remove(key);
+            }
         }
 
         public void SetValue(string key, object value)
         {
-            throw new NotImplementedException();
+            PooledRedisClientHelper.SetT<object>(key, value);
         }
 
         public void SetValue(string key, object value, DateTime absoluteExpiration, TimeSpan slidingExpiration)
         {
-            throw new NotImplementedException();
+            PooledRedisClientHelper.SetT<object>(key, value);
         }
     }
 }
